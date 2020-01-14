@@ -22,4 +22,4 @@ Route::get('/produtos/mostra/{id}', 'ProdutoController@mostra')->where('id','[0-
 
 Route::get('/produtos/novo','ProdutoController@novo');
 
-Route::get('/produtos/adiciona','ProdutoController@adiciona');
+Route::post('/produtos/adiciona','ProdutoController@adiciona');
