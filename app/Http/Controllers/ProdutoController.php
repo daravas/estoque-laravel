@@ -1,8 +1,10 @@
 <?php
 namespace App\Http\Controllers;
 use Illuminate\Support\Facades\DB;
-use estoque\Produto;
+use App\Produto;
 use Request;
+use App\Http\Requests\ProdutosRequest;
+
 
 class ProdutoController extends Controller{
     public function lista(){
@@ -19,7 +21,7 @@ class ProdutoController extends Controller{
     public function mostra(){
       //  $id = Request::input('id','0'); //segundo parametro é valor default
         $id = Request::route('id'); //pega parametro da rota ao inves da url
-       //pode remover a requeste e add $id como parametro do metodo
+       //pode remover a request e add $id como parametro do metodo
       //  $resposta = DB::select('select * from produtos where id=?',[$id]);
        $produto = Produto::find($id); // usando eloquent
 
@@ -33,7 +35,7 @@ class ProdutoController extends Controller{
         return view('produto.formulario');
     }
 
-    public function adiciona(){
+    public function adiciona(ProdutosRequest $request){
 
       /*  $nome = Request::input('nome');
         $descricao = Request::input('descricao');
@@ -43,11 +45,18 @@ class ProdutoController extends Controller{
         DB::insert('insert into produtos(nome,quantidade,valor,descricao) values(?,?,?,?)', array($nome,$quantidade,$valor,$descricao));
         //return redirect('/produtos')->withInput(Request::only('nome')); retorna pra uma URI*/
 
-        $params = Request::all();
+        $params = $request->all();
        // $produto = new Produto($params);
       //  $produto->save();
         Produto::create($params);
         return redirect()->action('ProdutoController@lista')->withInput(Request::only('nome'));//retora para o metodo lista
+    }
+
+    public function remove($id){
+      $produto = Produto::find($id);
+      $produto->delete();
+
+      return redirect()->action('ProdutoController@lista');
     }
 
 }
